@@ -1,10 +1,13 @@
 package com.github.joanersoncosta.api.usuario.application.api;
 
+import java.util.UUID;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.joanersoncosta.api.usuario.application.api.request.UsuarioNovoRequest;
 import com.github.joanersoncosta.api.usuario.application.api.response.UsuarioCriadoResponse;
+import com.github.joanersoncosta.api.usuario.application.api.response.UsuarioDetalhadoResponse;
 import com.github.joanersoncosta.api.usuario.application.service.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,4 +27,14 @@ public class UsuarioController implements UsuarioAPI {
 		log.info("[finish] UsuarioController - postNovoUsuario");
 		return usuarioCriado;
 	}
+
+	@Override
+	public UsuarioDetalhadoResponse buscaUsuarioPorId(UUID idUsuario) {
+		log.info("[inicia] UsuarioController - buscaUsuarioPorId");
+		log.info("[idUsuario] {}", idUsuario);
+		UsuarioDetalhadoResponse usuarioResponse = usuarioAppplicationService.buscaUsuarioPorId(idUsuario);
+		log.info("[finaliza] UsuarioController - buscaUsuarioPorId");
+		return usuarioResponse;
+	}
+	
 }

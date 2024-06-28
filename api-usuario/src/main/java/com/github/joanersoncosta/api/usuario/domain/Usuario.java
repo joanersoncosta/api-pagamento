@@ -10,9 +10,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.Email;
 
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.http.HttpStatus;
 
-import com.github.joanersoncosta.api.handler.APIException;
 import com.github.joanersoncosta.api.usuario.application.api.request.UsuarioNovoRequest;
 
 import lombok.AccessLevel;
@@ -40,10 +38,4 @@ public class Usuario {
 		this.email = usuarioNovo.email();
 		this.cpf = usuarioNovo.cpf();
 	}
-	
-    public void validaUsuario(UUID idUsuario) {
-        if (!this.idUsuario.equals(idUsuario)) {
-            throw APIException.build(HttpStatus.UNAUTHORIZED, "Credencial de autenticação não é válida.");
-        }
-    }
 }
