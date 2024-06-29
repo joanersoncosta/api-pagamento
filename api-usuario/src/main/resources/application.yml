@@ -1,6 +1,9 @@
 server:
   servlet:
-    context-path: /wakacop
+    context-path: /usuario/api
+logging:
+  level:
+    com.github.joanersoncosta.api: ${LOG_LEVEL:DEBUG}    
 spring:
  application:
   name: usuario
