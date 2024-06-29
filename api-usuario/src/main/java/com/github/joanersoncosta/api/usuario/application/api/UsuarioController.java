@@ -22,18 +22,18 @@ public class UsuarioController implements UsuarioAPI {
 
 	@Override
 	public UsuarioCriadoResponse postNovoUsuario(UsuarioNovoRequest usuarioNovo) {
-		log.info("[init] UsuarioController - postNovoUsuario");
+		log.debug("[start] UsuarioController - postNovoUsuario");
 		UsuarioCriadoResponse usuarioCriado = usuarioAppplicationService.criaNovoUsuario(usuarioNovo);
-		log.info("[finish] UsuarioController - postNovoUsuario");
+		log.debug("[start] UsuarioController - postNovoUsuario");
 		return usuarioCriado;
 	}
 
 	@Override
 	public UsuarioDetalhadoResponse buscaUsuarioPorId(UUID idUsuario) {
-		log.info("[inicia] UsuarioController - buscaUsuarioPorId");
-		log.info("[idUsuario] {}", idUsuario);
+		log.debug("[start] UsuarioController - buscaUsuarioPorId");
+		log.debug("[idUsuario] {}", idUsuario);
 		UsuarioDetalhadoResponse usuarioResponse = usuarioAppplicationService.buscaUsuarioPorId(idUsuario);
-		log.info("[finaliza] UsuarioController - buscaUsuarioPorId");
+		log.debug("[finaliza] UsuarioController - buscaUsuarioPorId");
 		return usuarioResponse;
 	}
 	

@@ -9,4 +9,5 @@ import com.github.joanersoncosta.api.usuario.application.api.response.UsuarioDet
 public interface UsuarioService {
 	UsuarioCriadoResponse criaNovoUsuario(UsuarioNovoRequest usuarioNovo);
 	UsuarioDetalhadoResponse buscaUsuarioPorId(UUID idUsuario);
+	void validaCpfUsuario(String cpfUsuario);
 }
