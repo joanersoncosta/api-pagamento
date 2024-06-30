@@ -1,2 +1,8 @@
 .metadata/
+<<<<<<< HEAD
+=======
+RemoteSystemsTempFiles/.metadata/
+RemoteSystemsTempFiles/
+.metadata/
+>>>>>>> feature/api-usuario
 RemoteSystemsTempFiles/
