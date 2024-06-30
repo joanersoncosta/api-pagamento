@@ -1,5 +1,0 @@
-package com.github.joanersoncosta.api.usuario.application.api.response;
-
-public class UsuarioDetalhadoResponse {
-
-}

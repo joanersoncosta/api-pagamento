@@ -1,3 +1,0 @@
-INDEX VERSION 1.132+C:\wakanda\mensageria\kafka\api-pagamento\.metadata\.plugins\org.eclipse.jdt.core
-635242318.index
-1865797976.index
