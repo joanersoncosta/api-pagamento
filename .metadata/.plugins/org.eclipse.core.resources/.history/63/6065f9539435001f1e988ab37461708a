@@ -1,0 +1,29 @@
+package com.github.joanersoncosta.api.usuario.application.service;
+
+import javax.validation.Valid;
+
+import org.springframework.stereotype.Service;
+
+import com.github.joanersoncosta.api.usuario.application.api.request.UsuarioNovoRequest;
+import com.github.joanersoncosta.api.usuario.application.api.response.UsuarioCriadoResponse;
+import com.github.joanersoncosta.api.usuario.domain.Usuario;
+
+import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+
+@Service
+@Log4j2
+@RequiredArgsConstructor
+public class UsuarioApplicationService implements UsuarioService {
+	private final UsuarioRepository usuarioRepository;
+
+	@Override
+	public UsuarioCriadoResponse criaNovoUsuario(@Valid UsuarioNovoRequest usuarioNovo) {
+		log.info("[inicia] UsuarioApplicationService - criaNovoUsuario");
+		var usuario = new Usuario(usuarioNovo,configuracaoPadrao);
+		usuarioRepository.salva(usuario);
+		log.info("[finaliza] UsuarioApplicationService - criaNovoUsuario");
+		return new UsuarioCriadoResponse(usuario);
+	}
+}

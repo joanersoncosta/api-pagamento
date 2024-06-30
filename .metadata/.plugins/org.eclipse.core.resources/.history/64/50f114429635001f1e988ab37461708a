@@ -1,0 +1,25 @@
+package com.github.joanersoncosta.api.usuario.application.api.response;
+
+import java.util.UUID;
+
+import javax.validation.constraints.Email;
+
+import org.hibernate.validator.constraints.br.CPF;
+
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@ToString
+public class UsuarioDetalhadoResponse {
+    private UUID idUsuario;
+    private String email;
+    private String cpf;
+
+	public UsuarioDetalhadoResponse(UUID idUsuario, @Email String email, @CPF String cpf) {
+		this.idUsuario = idUsuario;
+		this.email = email;
+		this.cpf = cpf;
+	}
+    
+}

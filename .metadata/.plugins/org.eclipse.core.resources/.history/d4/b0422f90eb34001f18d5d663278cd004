@@ -1,0 +1,6 @@
+spring:
+ application:
+  name: api-usuario
+server:
+  servlet:
+    context-path: /wakacop  

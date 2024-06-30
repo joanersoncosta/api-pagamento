@@ -1,0 +1,5 @@
+package com.github.joanersoncosta.api.usuario.infra;
+
+public interface UsuarioJpaSpringRepository {
+
+}

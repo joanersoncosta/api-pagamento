@@ -1,0 +1,39 @@
+package com.github.joanersoncosta.api.usuario.domain;
+
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+
+import com.github.joanersoncosta.api.handler.APIException;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+@ToString
+@Entity
+public class Usuario {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID idUsuario;
+    
+    @Email
+    private String email;
+    
+    @CPF
+    private String cpf;
+
+    public void validaUsuario(UUID idUsuario) {
+        if (!this.idUsuario.equals(idUsuario)) {
+            throw APIException.build(HttpStatus.UNAUTHORIZED, "Credencial de autenticação não é válida.");
+        }
+    }
+}

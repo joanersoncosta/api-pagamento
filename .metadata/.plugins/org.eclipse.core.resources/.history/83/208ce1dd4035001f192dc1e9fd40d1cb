@@ -1,0 +1,5 @@
+package com.github.joanersoncosta.api.config.security;
+
+public class SomeBeanType {
+
+}

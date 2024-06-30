@@ -1,0 +1,26 @@
+package com.github.joanersoncosta.api.credencial.domain;
+
+import org.springframework.security.core.GrantedAuthority;
+
+import jakarta.persistence.Entity;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@@Entity
+public class Perfil implements GrantedAuthority {
+	@Getter
+	private String nome;
+
+	@Override
+	public String getAuthority() {
+		return this.nome;
+	}
+
+	public Perfil(String perfil) {
+		this.nome = perfil;
+	}
+
+	private static final long serialVersionUID = 1L;
+}
