@@ -4,11 +4,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 public record UsuarioNovoRequest(
 	@Email
 	@NotBlank
 	String email,
-	@Email
+	@CPF
 	@NotBlank
 	String cpf,
 	@Size(min = 6)

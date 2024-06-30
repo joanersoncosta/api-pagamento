@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.github.joanersoncosta.api.usuario.infra.client.ConcultaCpfResponse;
 
-@FeignClient(name = "serproClientFeign", url = "https://gateway.apiserpro.serpro.gov.br/consulta-cpf-df-trial")
+@FeignClient(name = "serproClient", url = "https://gateway.apiserpro.serpro.gov.br/consulta-cpf-df-trial")
 public interface SerproClientFeign {
-	@GetMapping(path = "/v1/cpf/{cpfAssociado}")
+	@GetMapping(path = "/v1/cpf/{cpfUsuario}")
 	ConcultaCpfResponse consultaCPF(@RequestHeader(value = "Authorization") String token,
-			@PathVariable String cpfAssociado);
+			@PathVariable String cpfUsuario);
 }
