@@ -3,6 +3,7 @@ package com.github.joanersoncosta.api.boleto.domain;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.github.joanersoncosta.api.boleto.application.api.request.BoletoRequest;
 import com.github.joanersoncosta.api.boleto.domain.enuns.SituacaoBoleto;
 
 import jakarta.persistence.Column;
@@ -27,8 +28,19 @@ public class Boleto {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(columnDefinition = "uuid", updatable = false, unique = true, nullable = false)
 	private UUID idBoleto;
+	@Column(columnDefinition = "uuid", updatable = false)
+	private UUID idUsuario;
 	private String codigoBarras;
 	private SituacaoBoleto situacaoBoleto;
 	private LocalDateTime dataCriacao;
 	private LocalDateTime dataFinalizacao;
+	
+	public Boleto(BoletoRequest boletoRequest) {
+		this.idUsuario = boletoRequest.idUsuario();
+		this.codigoBarras = boletoRequest.codigoBarras();
+		this.situacaoBoleto = SituacaoBoleto.INICIALIZADO;
+		this.dataCriacao = LocalDateTime.now();
+		this.dataFinalizacao = LocalDateTime.now();
+	}
+	
 }

@@ -1,13 +1,16 @@
 server:
  servlet:
-  context-path: /usuario/api
+  context-path: /api
  port: 8181    
+ 
 logging:
  level:
-  com.github.joanersoncosta.api: ${LOG_LEVEL:DEBUG}    
+  com.github.joanersoncosta.api: ${LOG_LEVEL:DEBUG} 
+     
 spring:
  application:
   name: msboleto
+  
  datasource:
   url: jdbc:h2:mem:boleto
   driver-class-name: org.h2.Driver
