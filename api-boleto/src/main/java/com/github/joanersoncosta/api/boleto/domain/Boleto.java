@@ -39,8 +39,8 @@ public class Boleto {
 	private String codigoBarras;
 	@Enumerated(EnumType.STRING)
 	private SituacaoBoleto situacaoBoleto;
-	private LocalDateTime dataCriacao;
-	private LocalDateTime dataFinalizacao;
+    private LocalDateTime dataCriacao;
+    private LocalDateTime dataFinalizacao;
 	
 	public Boleto(BoletoRequest boletoRequest) {
 		this.idUsuario = boletoRequest.idUsuario();
