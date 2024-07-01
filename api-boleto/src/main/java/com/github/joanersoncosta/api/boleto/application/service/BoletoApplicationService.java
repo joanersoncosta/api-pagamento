@@ -18,9 +18,11 @@ public class BoletoApplicationService implements BoletoService {
 	private final BoletoRepository boletoRepository;
 	
 	@Override
-	public BoletoResponse salva(BoletoRequest boletoRequest) {
+	public BoletoResponse salva(BoletoRequest novoBoleto) {
 		log.debug("[start] BoletoApplicationService - salva");
-		var boleto = boletoRepository.salva(new Boleto(boletoRequest));
+		log.debug("[novoBoleto] {}", novoBoleto);
+		boletoRepository.validaBoletoExistente(novoBoleto.codigoBarras());
+		var boleto = boletoRepository.salva(new Boleto(novoBoleto));
 		log.debug("[finish] BoletoApplicationService - salva");
 		return new BoletoResponse(boleto);
 	}
@@ -28,6 +30,7 @@ public class BoletoApplicationService implements BoletoService {
 	@Override
 	public BoletoDetalhadoResponse buscaBoletoCodigoBarras(String codigoBarras) {
 		log.debug("[start] BoletoApplicationService - buscaBoletoCodigoBarras");
+		log.debug("[codigoBarras] {}", codigoBarras);
 		var boleto = boletoRepository.buscaBoletoCodigoBarras(codigoBarras);
 		log.debug("[finish] BoletoApplicationService - buscaBoletoCodigoBarras");
 		return new BoletoDetalhadoResponse(boleto);

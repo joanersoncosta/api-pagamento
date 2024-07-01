@@ -20,11 +20,11 @@ public class BoletoDetalhadoResponse {
 	private LocalDateTime dataFinalizacao;
 	
 	public BoletoDetalhadoResponse(Boleto boleto) {
-		this.idBoleto = idBoleto;
-		this.codigoBarras = codigoBarras;
-		this.situacao = situacao;
-		this.dataCriacao = dataCriacao;
-		this.dataFinalizacao = dataFinalizacao;
+		this.idBoleto = boleto.getIdBoleto();
+		this.codigoBarras = boleto.getCodigoBarras();
+		this.situacao = boleto.getSituacaoBoleto();
+		this.dataCriacao = boleto.getDataCriacao();
+		this.dataFinalizacao = boleto.getDataFinalizacao();
 	}
 	
 }

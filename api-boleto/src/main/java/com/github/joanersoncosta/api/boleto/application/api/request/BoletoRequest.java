@@ -3,10 +3,11 @@ package com.github.joanersoncosta.api.boleto.application.api.request;
 import java.util.UUID;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record BoletoRequest(
-		@NotBlank(message = "não pode ser nullo ou em branco!") 
+		@NotNull(message = "idUsuario não pode ser nullo!") 
 		UUID idUsuario,	
-		@NotBlank(message = "não pode ser nullo ou em branco!") 
+		@NotBlank(message = "Código de Barras não pode ser nullo ou em branco!") 
 		String codigoBarras) {
 }

@@ -8,9 +8,13 @@ import com.github.joanersoncosta.api.boleto.domain.enuns.SituacaoBoleto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,8 +33,11 @@ public class Boleto {
 	@Column(columnDefinition = "uuid", updatable = false, unique = true, nullable = false)
 	private UUID idBoleto;
 	@Column(columnDefinition = "uuid", updatable = false)
+	@NotNull
 	private UUID idUsuario;
+	@NotBlank
 	private String codigoBarras;
+	@Enumerated(EnumType.STRING)
 	private SituacaoBoleto situacaoBoleto;
 	private LocalDateTime dataCriacao;
 	private LocalDateTime dataFinalizacao;
