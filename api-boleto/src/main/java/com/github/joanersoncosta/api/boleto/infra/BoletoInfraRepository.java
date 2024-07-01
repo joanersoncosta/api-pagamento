@@ -1,5 +1,6 @@
 package com.github.joanersoncosta.api.boleto.infra;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import com.github.joanersoncosta.api.boleto.application.repository.BoletoRepository;
@@ -20,6 +21,17 @@ public class BoletoInfraRepository implements BoletoRepository {
 		var boletoCriado = boletoSpringJPARepository.save(boleto);
 		log.debug("[finish] BoletoInfraRepository - salva");
 		return boletoCriado;
+	}
+
+	@Override
+	public Boleto buscaBoletoCodigoBarras(String codigoBarras) {
+		log.debug("[start] BoletoInfraRepository - buscaBoletoCodigoBarras");
+		Boleto boleto = boletoSpringJPARepository.findByCodigoBarras(codigoBarras)
+				.orElseThrow(
+//						() -> APIException.build(HttpStatus.NOT_FOUND, "Boleto não para este código de barras.")
+						);		
+		log.debug("[finish] BoletoInfraRepository - buscaBoletoCodigoBarras");
+		return boleto;
 	}
 
 }
