@@ -38,7 +38,7 @@ public class BoletoInfraRepository implements BoletoRepository {
 		log.debug("[start] BoletoInfraRepository - validaBoletoExistente");
 		boletoSpringJPARepository.findByCodigoBarras(codigoBarras)
         .ifPresent(boletoExistente ->{
-            throw APIException.build(HttpStatus.CONFLICT, "Já existe uma solicitação de pagamento para este boleto.");
+            throw APIException.build(HttpStatus.CONFLICT, "Já existe um boleto em processamento para este código de barras.");
         });
 		log.debug("[finish] BoletoInfraRepository - validaBoletoExistente");
 	}

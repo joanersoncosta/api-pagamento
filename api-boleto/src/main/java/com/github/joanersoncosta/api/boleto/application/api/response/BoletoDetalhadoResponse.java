@@ -12,13 +12,13 @@ import lombok.ToString;
 @Getter
 @ToString
 public class BoletoDetalhadoResponse {
-
+	
 	private UUID idBoleto;
 	private String codigoBarras;
 	private SituacaoBoleto situacao;
 	private LocalDateTime dataCriacao;
 	private LocalDateTime dataFinalizacao;
-
+	
 	public BoletoDetalhadoResponse(Boleto boleto) {
 		this.idBoleto = boleto.getIdBoleto();
 		this.codigoBarras = boleto.getCodigoBarras();
@@ -26,4 +26,5 @@ public class BoletoDetalhadoResponse {
 		this.dataCriacao = boleto.getDataCriacao();
 		this.dataFinalizacao = boleto.getDataFinalizacao();
 	}
+	
 }
