@@ -6,6 +6,8 @@ import java.util.UUID;
 import com.github.joanersoncosta.avro.BoletoAvro;
 import com.github.joanersoncosta.validadorboleto.boleto.application.repository.BoletoRepository;
 import com.github.joanersoncosta.validadorboleto.boleto.domain.enuns.SituacaoBoleto;
+import com.github.joanersoncosta.validadorboleto.notificacao.NotificacaoProducer;
+import com.github.joanersoncosta.validadorboleto.pagamento.appication.service.PagamentoService;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,14 +45,6 @@ public class Boleto {
     private LocalDateTime dataCriacao;
     private LocalDateTime dataFinalizacao;
 	
-	public Boleto(UUID idUsuario, String codigoBarras) {
-		this.idUsuario = idUsuario;
-		this.codigoBarras = codigoBarras;
-		this.situacaoBoleto = SituacaoBoleto.INICIALIZADO;
-		this.dataCriacao = LocalDateTime.now();
-		this.dataFinalizacao = LocalDateTime.now();
-	}
-	
 	public Boleto(BoletoAvro boletoAvro) {
 		this.codigoBarras = boletoAvro.getCodigoBarras().toString();
 		this.situacaoBoleto = SituacaoBoleto.values()[boletoAvro.getSituacaoBoleto()];
@@ -65,24 +59,48 @@ public class Boleto {
 		return new Boleto(boleto);
 	}
 
-	public void complementaBoleto(BoletoRepository boletoRepository) {
+	public void complementaBoletoValidado(BoletoRepository boletoRepository, NotificacaoProducer notificacaoProducer, PagamentoService pagamentoService) {
 		var codigo = Integer.parseInt(this.codigoBarras.substring(0, 1));
 		if(codigo % 2 == 0) {
-			complentaBoletoErro(boletoRepository);
+			complementaBoletoErroValidacao(boletoRepository, notificacaoProducer);
 		}else {
-			complentaBoletoSucesso(boletoRepository);
+			complementaValidado(boletoRepository, notificacaoProducer, pagamentoService);
 		}
 	}
+	
+	public void complementaBoletoPagamento(BoletoRepository boletoRepository, NotificacaoProducer notificacaoProducer) {
+		String codigoBarrasNumericos = this.codigoBarras.replaceAll("[^0-9]", "");
+		if(codigoBarrasNumericos.length() > 47) {
+			complementaErroPagamento();
+		}else {
+			complementaPago();
+		}
+		boletoRepository.salva(this);
+		notificacaoProducer.enviarMensagem(converteAvro());
+	}
 
-	private void complentaBoletoErro(BoletoRepository boletoRepository) {
+	private void complementaBoletoErroValidacao(BoletoRepository boletoRepository, NotificacaoProducer notificacaoProducer) {
 		this.situacaoBoleto = SituacaoBoleto.ERRO_VALIDACAO;
 		this.dataFinalizacao = LocalDateTime.now();
 		boletoRepository.salva(this);
+		notificacaoProducer.enviarMensagem(converteAvro());
 	}
 
-	private void complentaBoletoSucesso(BoletoRepository boletoRepository) {
+	private void complementaValidado(BoletoRepository boletoRepository, NotificacaoProducer notificacaoProducer, PagamentoService pagamentoService) {
 		this.situacaoBoleto = SituacaoBoleto.VALIDADO;
 		this.dataFinalizacao = LocalDateTime.now();
 		boletoRepository.salva(this);
+		notificacaoProducer.enviarMensagem(converteAvro());
+		pagamentoService.pagamento(this);
+	}
+	
+	private void complementaErroPagamento() {
+		this.situacaoBoleto = SituacaoBoleto.ERRO_PAGAMENTO;
+		this.dataFinalizacao = LocalDateTime.now();
+	}
+	
+	private void complementaPago() {
+		this.situacaoBoleto =SituacaoBoleto.PAGO;
+		this.dataFinalizacao = LocalDateTime.now();
 	}
 }
