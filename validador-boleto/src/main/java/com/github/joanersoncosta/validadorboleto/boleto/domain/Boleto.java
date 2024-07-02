@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.github.joanersoncosta.avro.BoletoAvro;
+import com.github.joanersoncosta.validadorboleto.boleto.application.repository.BoletoRepository;
 import com.github.joanersoncosta.validadorboleto.boleto.domain.enuns.SituacaoBoleto;
 
 import jakarta.persistence.Column;
@@ -62,5 +63,26 @@ public class Boleto {
 	
 	public static Boleto converteParaEntity(BoletoAvro boleto) {
 		return new Boleto(boleto);
+	}
+
+	public void complementaBoleto(BoletoRepository boletoRepository) {
+		var codigo = Integer.parseInt(this.codigoBarras.substring(0, 1));
+		if(codigo % 2 == 0) {
+			complentaBoletoErro(boletoRepository);
+		}else {
+			complentaBoletoSucesso(boletoRepository);
+		}
+	}
+
+	private void complentaBoletoErro(BoletoRepository boletoRepository) {
+		this.situacaoBoleto = SituacaoBoleto.ERRO_VALIDACAO;
+		this.dataFinalizacao = LocalDateTime.now();
+		boletoRepository.salva(this);
+	}
+
+	private void complentaBoletoSucesso(BoletoRepository boletoRepository) {
+		this.situacaoBoleto = SituacaoBoleto.VALIDADO;
+		this.dataFinalizacao = LocalDateTime.now();
+		boletoRepository.salva(this);
 	}
 }
