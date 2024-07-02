@@ -7,15 +7,17 @@ import com.github.joanersoncosta.api.boleto.application.api.response.BoletoDetal
 import com.github.joanersoncosta.api.boleto.application.api.response.BoletoResponse;
 import com.github.joanersoncosta.api.boleto.application.repository.BoletoRepository;
 import com.github.joanersoncosta.api.boleto.domain.Boleto;
+import com.github.joanersoncosta.api.kafka.producer.BoletoProducer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2(topic = "BoletoApplicationService")
+@Log4j2
 public class BoletoApplicationService implements BoletoService {
 	private final BoletoRepository boletoRepository;
+	private final BoletoProducer boletoProducer;
 	
 	@Override
 	public BoletoResponse salva(BoletoRequest novoBoleto) {
@@ -23,6 +25,7 @@ public class BoletoApplicationService implements BoletoService {
 		log.debug("[novoBoleto] {}", novoBoleto);
 		boletoRepository.validaBoletoExistente(novoBoleto.codigoBarras());
 		var boleto = boletoRepository.salva(new Boleto(novoBoleto));
+		boletoProducer.enviarMensagem(boleto.converteAvro());
 		log.debug("[finish] BoletoApplicationService - salva");
 		return new BoletoResponse(boleto);
 	}
@@ -34,6 +37,14 @@ public class BoletoApplicationService implements BoletoService {
 		var boleto = boletoRepository.buscaBoletoCodigoBarras(codigoBarras);
 		log.debug("[finish] BoletoApplicationService - buscaBoletoCodigoBarras");
 		return new BoletoDetalhadoResponse(boleto);
+	}
+
+	@Override
+	public void atualiza(Boleto boleto) {
+		log.debug("[start] BoletoApplicationService - atualiza");
+		log.debug("[boleto] {}", boleto);
+		boleto.complementaBoletoPagamento(boletoRepository);
+		log.debug("[finish] BoletoApplicationService - atualiza");
 	}
 
 }

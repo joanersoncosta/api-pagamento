@@ -1,12 +1,12 @@
-package com.github.joanersoncosta.api.boleto.domain;
+package com.github.joanersoncosta.validadorboleto.boleto.domain;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.github.joanersoncosta.api.boleto.application.api.request.BoletoRequest;
-import com.github.joanersoncosta.api.boleto.application.repository.BoletoRepository;
-import com.github.joanersoncosta.api.boleto.domain.enuns.SituacaoBoleto;
 import com.github.joanersoncosta.avro.BoletoAvro;
+import com.github.joanersoncosta.validadorboleto.boleto.application.repository.BoletoRepository;
+import com.github.joanersoncosta.validadorboleto.boleto.domain.enuns.SituacaoBoleto;
+import com.github.joanersoncosta.validadorboleto.notificacao.NotificacaoProducer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,14 +44,6 @@ public class Boleto {
     private LocalDateTime dataCriacao;
     private LocalDateTime dataFinalizacao;
 	
-	public Boleto(BoletoRequest boletoRequest) {
-		this.idUsuario = boletoRequest.idUsuario();
-		this.codigoBarras = boletoRequest.codigoBarras();
-		this.situacaoBoleto = SituacaoBoleto.INICIALIZADO;
-		this.dataCriacao = LocalDateTime.now();
-		this.dataFinalizacao = LocalDateTime.now();
-	}
-	
 	public Boleto(BoletoAvro boletoAvro) {
 		this.codigoBarras = boletoAvro.getCodigoBarras().toString();
 		this.situacaoBoleto = SituacaoBoleto.values()[boletoAvro.getSituacaoBoleto()];
@@ -65,26 +57,25 @@ public class Boleto {
 	public static Boleto converteParaEntity(BoletoAvro boleto) {
 		return new Boleto(boleto);
 	}
-	
-	public void complementaBoletoPagamento(BoletoRepository boletoRepository) {
-		String codigoBarrasNumericos = this.codigoBarras.replaceAll("[^0-9]", "");
-		if(codigoBarrasNumericos.length() > 47) {
-			complementaErroPagamento();
+
+	public void complementaBoletoValidado(BoletoRepository boletoRepository, NotificacaoProducer notificacaoProducer) {
+		var codigo = Integer.parseInt(this.codigoBarras.substring(0, 1));
+		if(codigo % 2 == 0) {
+			complementaBoletoErroValidacao();
 		}else {
-			complementaPago();
+			complementaValidado();
 		}
 		boletoRepository.salva(this);
+		notificacaoProducer.enviarMensagem(converteAvro());
 	}
-	
-	private void complementaErroPagamento() {
-		this.situacaoBoleto = SituacaoBoleto.ERRO_PAGAMENTO;
-		this.dataFinalizacao = LocalDateTime.now();
-	}
-	
-	private void complementaPago() {
-		this.situacaoBoleto =SituacaoBoleto.PAGO;
+
+	private void complementaBoletoErroValidacao() {
+		this.situacaoBoleto = SituacaoBoleto.ERRO_VALIDACAO;
 		this.dataFinalizacao = LocalDateTime.now();
 	}
 
-
+	private void complementaValidado() {
+		this.situacaoBoleto = SituacaoBoleto.VALIDADO;
+		this.dataFinalizacao = LocalDateTime.now();
+	}
 }

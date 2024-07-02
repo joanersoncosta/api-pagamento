@@ -1,7 +1,7 @@
 server:
  servlet:
   context-path: /api
- port: 8080    
+ port: 8082    
  
 logging:
  level:
@@ -9,7 +9,7 @@ logging:
      
 spring:
  application:
-  name: api-boleto
+  name: validador-boleto
   
  datasource:
   url: jdbc:h2:mem:boleto
@@ -37,12 +37,16 @@ spring:
    specific:
     avro:
      reader: true   
-  producer:
-   key-serializer: org.apache.kafka.common.serialization.StringSerializer
-   value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
   consumer:
    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
    value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
-   group-id: api-boleto  
+   group-id: validador-boleto
+  producer:
+   key-serializer: org.apache.kafka.common.serialization.StringSerializer
+   value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+   
   topico-boleto: solicitacao-boleto
-  topico-notificacao: notificacao-boleto   
+  topico-notificacao: notificacao-boleto
+
+  listener:
+   ack-mode: MANUAL_IMMEDIATE
