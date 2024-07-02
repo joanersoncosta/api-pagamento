@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.github.joanersoncosta.api.boleto.application.api.request.BoletoRequest;
 import com.github.joanersoncosta.api.boleto.domain.enuns.SituacaoBoleto;
+import com.github.joanersoncosta.avro.BoletoAvro;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,4 +51,17 @@ public class Boleto {
 		this.dataFinalizacao = LocalDateTime.now();
 	}
 	
+	public Boleto(BoletoAvro boletoAvro) {
+		this.codigoBarras = boletoAvro.getCodigoBarras().toString();
+		this.situacaoBoleto = SituacaoBoleto.values()[boletoAvro.getSituacaoBoleto()];
+	}
+
+	public BoletoAvro converteAvro() {
+		return BoletoAvro.newBuilder().setCodigoBarras(this.codigoBarras)
+				.setSituacaoBoleto(this.situacaoBoleto.ordinal()).build();
+	}
+	
+	public static Boleto converteParaEntity(BoletoAvro boleto) {
+		return new Boleto(boleto);
+	}
 }

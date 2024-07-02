@@ -12,7 +12,7 @@ import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequiredArgsConstructor
-@Log4j2(topic = "BoletoController")
+@Log4j2
 public class BoletoController implements BoletoAPI {
 	private final BoletoService boletoService;
 	
