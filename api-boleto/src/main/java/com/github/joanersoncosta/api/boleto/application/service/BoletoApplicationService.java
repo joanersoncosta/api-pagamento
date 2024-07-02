@@ -39,4 +39,12 @@ public class BoletoApplicationService implements BoletoService {
 		return new BoletoDetalhadoResponse(boleto);
 	}
 
+	@Override
+	public void atualiza(Boleto boleto) {
+		log.debug("[start] BoletoApplicationService - atualiza");
+		log.debug("[boleto] {}", boleto);
+		boleto.complementaBoletoPagamento(boletoRepository);
+		log.debug("[finish] BoletoApplicationService - atualiza");
+	}
+
 }

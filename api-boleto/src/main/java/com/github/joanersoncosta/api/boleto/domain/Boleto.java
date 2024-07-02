@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.github.joanersoncosta.api.boleto.application.api.request.BoletoRequest;
+import com.github.joanersoncosta.api.boleto.application.repository.BoletoRepository;
 import com.github.joanersoncosta.api.boleto.domain.enuns.SituacaoBoleto;
 import com.github.joanersoncosta.avro.BoletoAvro;
 
@@ -64,4 +65,26 @@ public class Boleto {
 	public static Boleto converteParaEntity(BoletoAvro boleto) {
 		return new Boleto(boleto);
 	}
+	
+	public void complementaBoletoPagamento(BoletoRepository boletoRepository) {
+		String codigoBarrasNumericos = this.codigoBarras.replaceAll("[^0-9]", "");
+		if(codigoBarrasNumericos.length() > 47) {
+			complementaErroPagamento();
+		}else {
+			complementaPago();
+		}
+		boletoRepository.salva(this);
+	}
+	
+	private void complementaErroPagamento() {
+		this.situacaoBoleto = SituacaoBoleto.ERRO_PAGAMENTO;
+		this.dataFinalizacao = LocalDateTime.now();
+	}
+	
+	private void complementaPago() {
+		this.situacaoBoleto =SituacaoBoleto.PAGO;
+		this.dataFinalizacao = LocalDateTime.now();
+	}
+
+
 }
