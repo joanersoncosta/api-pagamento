@@ -21,7 +21,7 @@ public class BoletoConsumer {
 	public void consomeBoleto(@Payload BoletoAvro boleto, Acknowledgment ack) throws InterruptedException {
 		log.debug("[start] BoletoConsumer - consomeBoleto");
 		log.info("Consumindo mensagem: {}", boleto.toString());
-		Thread.sleep(5000);
+		Thread.sleep(10000);
 		boletoService.valida(Boleto.converteParaEntity(boleto));
 		ack.acknowledge();
 		log.debug("[finish] BoletoConsumer - consomeBoleto");

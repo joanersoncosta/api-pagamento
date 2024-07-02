@@ -7,7 +7,6 @@ import com.github.joanersoncosta.avro.BoletoAvro;
 import com.github.joanersoncosta.validadorboleto.boleto.application.repository.BoletoRepository;
 import com.github.joanersoncosta.validadorboleto.boleto.domain.enuns.SituacaoBoleto;
 import com.github.joanersoncosta.validadorboleto.notificacao.NotificacaoProducer;
-import com.github.joanersoncosta.validadorboleto.pagamento.appication.service.PagamentoService;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,48 +58,24 @@ public class Boleto {
 		return new Boleto(boleto);
 	}
 
-	public void complementaBoletoValidado(BoletoRepository boletoRepository, NotificacaoProducer notificacaoProducer, PagamentoService pagamentoService) {
+	public void complementaBoletoValidado(BoletoRepository boletoRepository, NotificacaoProducer notificacaoProducer) {
 		var codigo = Integer.parseInt(this.codigoBarras.substring(0, 1));
 		if(codigo % 2 == 0) {
-			complementaBoletoErroValidacao(boletoRepository, notificacaoProducer);
+			complementaBoletoErroValidacao();
 		}else {
-			complementaValidado(boletoRepository, notificacaoProducer, pagamentoService);
-		}
-	}
-	
-	public void complementaBoletoPagamento(BoletoRepository boletoRepository, NotificacaoProducer notificacaoProducer) {
-		String codigoBarrasNumericos = this.codigoBarras.replaceAll("[^0-9]", "");
-		if(codigoBarrasNumericos.length() > 47) {
-			complementaErroPagamento();
-		}else {
-			complementaPago();
+			complementaValidado();
 		}
 		boletoRepository.salva(this);
 		notificacaoProducer.enviarMensagem(converteAvro());
 	}
 
-	private void complementaBoletoErroValidacao(BoletoRepository boletoRepository, NotificacaoProducer notificacaoProducer) {
+	private void complementaBoletoErroValidacao() {
 		this.situacaoBoleto = SituacaoBoleto.ERRO_VALIDACAO;
 		this.dataFinalizacao = LocalDateTime.now();
-		boletoRepository.salva(this);
-		notificacaoProducer.enviarMensagem(converteAvro());
 	}
 
-	private void complementaValidado(BoletoRepository boletoRepository, NotificacaoProducer notificacaoProducer, PagamentoService pagamentoService) {
+	private void complementaValidado() {
 		this.situacaoBoleto = SituacaoBoleto.VALIDADO;
-		this.dataFinalizacao = LocalDateTime.now();
-		boletoRepository.salva(this);
-		notificacaoProducer.enviarMensagem(converteAvro());
-		pagamentoService.pagamento(this);
-	}
-	
-	private void complementaErroPagamento() {
-		this.situacaoBoleto = SituacaoBoleto.ERRO_PAGAMENTO;
-		this.dataFinalizacao = LocalDateTime.now();
-	}
-	
-	private void complementaPago() {
-		this.situacaoBoleto =SituacaoBoleto.PAGO;
 		this.dataFinalizacao = LocalDateTime.now();
 	}
 }
